@@ -26,16 +26,16 @@ body{min-height:100vh}
 /* Header styles */
 header{text-align:center;
   padding:5px 0 10px;
-  background:#5d6265;
+  background:#9ecec5;
 }
 /* Heading styles */
 .heading{color:white;
-  font-size:4rem;
+  font-size:6rem;
   font-weight:bold}
 
 /* H1 styles */
 .h1{font-weight:bold;
-  font-size:3.25rem;
+  font-size:4.25rem;
   margin:2rem auto
 }
 
@@ -56,12 +56,12 @@ h2{font-size:3rem;
 
 /* Search button styles */
 #search-btn{margin-bottom:2rem;
-  background-color:#5d6265;color:white}
+  background-color:#d5f4ef;color:white}
 
 /* History button styles */
 .btn{font-size:2rem;
   width:100%;
-  background-color:lightgrey;
+  background-color:#ddeeeb;
   color:black;
   border:none;border-radius:0.4rem;
   margin-top:2rem;
@@ -70,13 +70,17 @@ h2{font-size:3rem;
 /* Line break styles in search area */
 hr{border-top:0.3rem solid rgba(0,0,0,1)}
 
+
+
 /* Current weather container styles */
 #current-weather{height:30%;
   width: 50%;
-  background-color:#5d6265;
+  color: white;
+  background-color:#5ca699;
   height:20rem;
   padding:4% 0 0 4%;
   display:flex;
+  margin-top: 4rem;
   flex-direction:column;
   align-items:flex-start;
   justify-content:space-around;
@@ -95,7 +99,7 @@ ul{list-style-type:none;
 }
 
 /* Current weather icon styles */
-#current-weather-icon{filter:drop-shadow(0 0 0.75rem grey)}
+#current-weather-icon{filter:drop-shadow(0 0 0.75rem, red)}
 
 /* Moderate weather styles */
 .moderate{background-color:yellow;
@@ -114,7 +118,7 @@ h3{font-weight:bold;
 }
 
 /* Card body styles */
-.card-body{background-color:#5d6265;
+.card-body{background-color:#1a7e6c;
   height:20rem;
   padding:4% 0 0 4%;
   display:flex;
@@ -149,50 +153,4 @@ p{font-size:2rem;
   text-align:center
 }
 
-/* Media queries */
 
-/* Extra large devices (large desktops, 1200px and up) */
-@media (max-width:1144px){
-  .col1, .col2, .col3{width:100%}
-  #city-search, hr, .btn
-  {width:30rem;margin:0 auto;
-    margin-bottom:2rem
-  }
-  #city{text-align:center}
-  #search-history{display:flex;
-    flex-direction:column
-  }
-  #search-btn{width:100%;
-    margin-top:2rem;
-    margin-bottom:0
-  }
-  #current-weather{height:20%;
-    margin:0 auto;
-    text-align:center;
-    margin-top:2rem;
-    width:400px
-  }
-  h2{justify-content:center}
-  .card-body{background-color:#00334d;
-    height:20rem;padding-left:0;
-    padding-top:1%;display:flex;
-    flex-direction:column;align-items:center;
-    justify-content:space-around;
-    width:20rem;margin:0.5rem auto
-  }
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (max-width:992px){
-  /* Styles for large devices if needed */
-}
-
-/* Medium devices (tablets, 768px and up) */
-@media (max-width:768px){
-  .col1, .col2, .col3{width:100%}
-}
-
-/* Small devices (landscape phones, 630px and up) */
-@media (max-width:630px){
-  #current-weather{width:300px}
-}
