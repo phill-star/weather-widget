@@ -1,0 +1,198 @@
+/* Reset styles */
+*{margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-size:62.5%
+}
+
+/* Grid styles */
+.row{display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between}
+  .col1{width:20%} 
+  .col2{width:70%}
+  .col2 > *{margin-bottom:2rem
+}
+
+/* Helper classes */
+.border{border:1px solid black}
+.spacebetween{justify-content:space-around}
+.container{width:80%;margin:0 auto}
+.col3{width:18%;margin-top:1%}
+
+/* Body styles */
+body{min-height:100vh}
+
+/* Header styles */
+header{text-align:center;
+  padding:5px 0 10px;
+  background:#5d6265;
+}
+/* Heading styles */
+.heading{color:white;
+  font-size:4rem;
+  font-weight:bold}
+
+/* H1 styles */
+.h1{font-weight:bold;
+  font-size:3.25rem;
+  margin:2rem auto
+}
+
+/* H2 styles */
+h2{font-size:3rem;
+  font-weight:bold;display:f
+  lex;align-items:center;
+  margin-left:1%
+}
+
+/* Search area styles */
+#city{font-size:2rem;
+  width:100%;
+  border-radius:0.4rem;
+  border:0.1rem solid black;
+  height:4.5rem;
+  padding:0.5rem 0 0 0.5rem}
+
+/* Search button styles */
+#search-btn{margin-bottom:2rem;
+  background-color:#5d6265;color:white}
+
+/* History button styles */
+.btn{font-size:2rem;
+  width:100%;
+  background-color:lightgrey;
+  color:black;
+  border:none;border-radius:0.4rem;
+  margin-top:2rem;
+  padding:0.7rem 0}
+
+/* Line break styles in search area */
+hr{border-top:0.3rem solid rgba(0,0,0,1)}
+
+/* Current weather container styles */
+#current-weather{height:30%;
+  width: 50%;
+  background-color:#5d6265;
+  height:20rem;
+  padding:4% 0 0 4%;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:space-around;
+  border:0.3rem solid black;
+}
+
+/* List styles in weather container */
+ul{list-style-type:none;
+  font-size:3rem;
+  font-weight:bold;
+  height:70%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+  margin-left:1%
+}
+
+/* Current weather icon styles */
+#current-weather-icon{filter:drop-shadow(0 0 0.75rem grey)}
+
+/* Moderate weather styles */
+.moderate{background-color:yellow;
+  font-size:2rem;
+  border-radius:0.5rem
+}
+
+/* Severe weather styles */
+.severe{background-color:red;
+  font-size:2rem;border-radius:0.5rem
+}
+
+/* H3 header styles */
+h3{font-weight:bold;
+  font-size:2rem;color:white
+}
+
+/* Card body styles */
+.card-body{background-color:#5d6265;
+  height:20rem;
+  padding:4% 0 0 4%;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:space-around;
+  border:0.3rem solid black;
+}
+
+/* Weather details styles in card body */
+p{font-size:2rem;
+  color:white
+}
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 50em;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.search-history-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+
+/* Five-day header styles */
+#five-day-header{margin:1% 0;
+  text-align:center
+}
+
+/* Media queries */
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (max-width:1144px){
+  .col1, .col2, .col3{width:100%}
+  #city-search, hr, .btn
+  {width:30rem;margin:0 auto;
+    margin-bottom:2rem
+  }
+  #city{text-align:center}
+  #search-history{display:flex;
+    flex-direction:column
+  }
+  #search-btn{width:100%;
+    margin-top:2rem;
+    margin-bottom:0
+  }
+  #current-weather{height:20%;
+    margin:0 auto;
+    text-align:center;
+    margin-top:2rem;
+    width:400px
+  }
+  h2{justify-content:center}
+  .card-body{background-color:#00334d;
+    height:20rem;padding-left:0;
+    padding-top:1%;display:flex;
+    flex-direction:column;align-items:center;
+    justify-content:space-around;
+    width:20rem;margin:0.5rem auto
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (max-width:992px){
+  /* Styles for large devices if needed */
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (max-width:768px){
+  .col1, .col2, .col3{width:100%}
+}
+
+/* Small devices (landscape phones, 630px and up) */
+@media (max-width:630px){
+  #current-weather{width:300px}
+}
