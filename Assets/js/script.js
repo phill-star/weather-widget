@@ -1,7 +1,7 @@
-openWeatherApiKey = '26ba3a7e283acb9cd1e8665c6c3b319a';
+const openWeatherApiKey = '26ba3a7e283acb9cd1e8665c6c3b319a';
 const openWeatherCoordinatesUrl = 'https://api.openweathermap.org/data/2.5/weather?q=';
 const oneCallUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=';
-const userFormEL = $('#city-search');
+const userFormEl = $('#city-search');
 const col2El = $('.col2');
 const cityInputEl = $('#city');
 const fiveDayEl = $('#five-day');
@@ -11,24 +11,16 @@ const weatherIconUrl = 'http://openweathermap.org/img/wn/';
 const searchHistoryArray = loadSearchHistory();
 
 function titleCase(str) {
-  const splitStr = str.toLowerCase().split(' ');
-  for (let i = 0; i < splitStr.length; i++) {
-    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-  }
-  return splitStr.join(' ');
+  return str.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
 function loadSearchHistory() {
   let searchHistoryArray = JSON.parse(localStorage.getItem('search history'));
 
   if (!searchHistoryArray) {
-    searchHistoryArray = {
-      searchedCity: [],
-    };
+    searchHistoryArray = { searchedCity: [] };
   } else {
-    for (let i = 0; i < searchHistoryArray.searchedCity.length; i++) {
-      searchHistory(searchHistoryArray.searchedCity[i]);
-    }
+    searchHistoryArray.searchedCity.forEach(city => searchHistory(city));
   }
 
   return searchHistoryArray;
@@ -42,35 +34,51 @@ function searchHistory(city) {
   const searchHistoryBtn = $('<button>')
     .addClass('btn')
     .text(city)
-    .on('click', function() {
+    .on('click', () => {
       $('#current-weather').remove();
       $('#five-day').empty();
       $('#five-day-header').remove();
       getWeather(city);
     })
-    .attr({
-      type: 'button',
+    .attr('type', 'button');
+
+  const deleteBtn = $('<button>')
+    .addClass('delete-btn')
+    .html('&times;')
+    .on('click', event => {
+      event.stopPropagation();
+      const city = $(event.target).prev().text();
+      deleteSearchHistory(city);
+      $(event.target).parent().remove();
     });
 
-  searchHistoryEl.append(searchHistoryBtn);
+  const searchHistoryItem = $('<div>').addClass('search-history-item');
+  searchHistoryItem.append(searchHistoryBtn, deleteBtn);
+  searchHistoryEl.append(searchHistoryItem);
+}
+
+function deleteSearchHistory(city) {
+  const index = searchHistoryArray.searchedCity.indexOf(city);
+  if (index > -1) {
+    searchHistoryArray.searchedCity.splice(index, 1);
+    saveSearchHistory();
+  }
 }
 
 function getWeather(city) {
-  const apiCoordinatesUrl = openWeatherCoordinatesUrl + city + '&appid=' + openWeatherApiKey;
+  const apiCoordinatesUrl = `${openWeatherCoordinatesUrl}${city}&appid=${openWeatherApiKey}`;
 
   fetch(apiCoordinatesUrl)
-    .then(function(coordinateResponse) {
+    .then(coordinateResponse => {
       if (coordinateResponse.ok) {
-        coordinateResponse.json().then(function(data) {
-          const cityLatitude = data.coord.lat;
-          const cityLongitude = data.coord.lon;
-
-          const apiOneCallUrl = oneCallUrl + cityLatitude + '&lon=' + cityLongitude + '&appid=' + openWeatherApiKey + '&units=imperial';
+        coordinateResponse.json().then(data => {
+          const { lat: cityLatitude, lon: cityLongitude } = data.coord;
+          const apiOneCallUrl = `${oneCallUrl}${cityLatitude}&lon=${cityLongitude}&appid=${openWeatherApiKey}&units=imperial`;
 
           fetch(apiOneCallUrl)
-            .then(function(weatherResponse) {
+            .then(weatherResponse => {
               if (weatherResponse.ok) {
-                weatherResponse.json().then(function(weatherData) {
+                weatherResponse.json().then(weatherData => {
                   displayCurrentDay(city, weatherData);
                   displayFiveDayForecast(weatherData);
                 });
@@ -81,39 +89,28 @@ function getWeather(city) {
         alert('Error: Open Weather could not find city');
       }
     })
-    .catch(function(error) {
+    .catch(() => {
       alert('Unable to connect to Open Weather');
     });
 }
 
 function displayCurrentDay(city, weatherData) {
-  const currentWeatherEl = $('<div>').attr({
-    id: 'current-weather',
-  });
-
+  const currentWeatherEl = $('<div>').attr('id', 'current-weather');
   const weatherIcon = weatherData.current.weather[0].icon;
-  const cityCurrentWeatherIcon = weatherIconUrl + weatherIcon + '.png';
-
-  const currentWeatherHeadingEl = $('<h2>').text(city + ' (' + currentDay + ')');
-  const iconImgEl = $('<img>').attr({
-    id: 'current-weather-icon',
-    src: cityCurrentWeatherIcon,
-    alt: 'Weather Icon',
-  });
-
+  const cityCurrentWeatherIcon = `${weatherIconUrl}${weatherIcon}.png`;
+  const currentWeatherHeadingEl = $('<h2>').text(`${city} (${currentDay})`);
+  const iconImgEl = $('<img>').attr({ id: 'current-weather-icon', src: cityCurrentWeatherIcon, alt: 'Weather Icon' });
   const currWeatherListEl = $('<ul>');
-
   const currWeatherDetails = [
-    'Temp: ' + weatherData.current.temp + ' °F',
-    'Wind: ' + weatherData.current.wind_speed + ' MPH',
-    'Humidity: ' + weatherData.current.humidity + '%',
+    `Temp: ${weatherData.current.temp} °F`,
+    `Wind: ${weatherData.current.wind_speed} MPH`,
+    `Humidity: ${weatherData.current.humidity}%`
   ];
 
-  for (let i = 0; i < currWeatherDetails.length; i++) {
-    if (currWeatherDetails[i] === 'UV Index: ' + weatherData.current.uvi) {
+  for (const detail of currWeatherDetails) {
+    if (detail === `UV Index: ${weatherData.current.uvi}`) {
       const currWeatherListItem = $('<li>').text('UV Index: ');
       currWeatherListEl.append(currWeatherListItem);
-
       const uviItem = $('<span>').text(weatherData.current.uvi);
 
       if (uviItem.text() <= 2) {
@@ -126,7 +123,7 @@ function displayCurrentDay(city, weatherData) {
 
       currWeatherListItem.append(uviItem);
     } else {
-      const currWeatherListItem = $('<li>').text(currWeatherDetails[i]);
+      const currWeatherListItem = $('<li>').text(detail);
       currWeatherListEl.append(currWeatherListItem);
     }
   }
@@ -138,31 +135,19 @@ function displayCurrentDay(city, weatherData) {
 }
 
 function displayFiveDayForecast(weatherData) {
-  const fiveDayHeaderEl = $('<h2>').text('5-Day Forecast:').attr({
-    id: 'five-day-header',
-  });
-
+  const fiveDayHeaderEl = $('<h2>').text('5-Day Forecast:').attr('id', 'five-day-header');
   $('#current-weather').after(fiveDayHeaderEl);
+  const fiveDayArray = Array.from({ length: 5 }, (_, i) => moment().add(i + 1, 'days').format('M/DD/YYYY'));
 
-  const fiveDayArray = [];
-
-  for (let i = 0; i < 5; i++) {
-    const forecastDate = moment().add(i + 1, 'days').format('M/DD/YYYY');
-    fiveDayArray.push(forecastDate);
-  }
-
-  for (let i = 0; i < fiveDayArray.length; i++) {
+  for (const forecastDate of fiveDayArray) {
     const cardDivEl = $('<div>').addClass('col3');
     const cardBodyDivEl = $('<div>').addClass('card-body');
-    const cardTitleEl = $('<h3>').addClass('card-title').text(fiveDayArray[i]);
-    const forecastIcon = weatherData.daily[i].weather[0].icon;
-    const forecastIconEl = $('<img>').attr({
-      src: weatherIconUrl + forecastIcon + '.png',
-      alt: 'Weather Icon',
-    });
-    const tempEL = $('<p>').addClass('card-text').text('Temp: ' + weatherData.daily[i].temp.max);
-    const windEL = $('<p>').addClass('card-text').text('Wind: ' + weatherData.daily[i].wind_speed + ' MPH');
-    const humidityEL = $('<p>').addClass('card-text').text('Humidity: ' + weatherData.daily[i].humidity + '%');
+    const cardTitleEl = $('<h3>').addClass('card-title').text(forecastDate);
+    const forecastIcon = weatherData.daily[fiveDayArray.indexOf(forecastDate)].weather[0].icon;
+    const forecastIconEl = $('<img>').attr({ src: `${weatherIconUrl}${forecastIcon}.png`, alt: 'Weather Icon' });
+    const tempEL = $('<p>').addClass('card-text').text(`Temp: ${weatherData.daily[fiveDayArray.indexOf(forecastDate)].temp.max}`);
+    const windEL = $('<p>').addClass('card-text').text(`Wind: ${weatherData.daily[fiveDayArray.indexOf(forecastDate)].wind_speed} MPH`);
+    const humidityEL = $('<p>').addClass('card-text').text(`Humidity: ${weatherData.daily[fiveDayArray.indexOf(forecastDate)].humidity}%`);
 
     $('#five-day').append(cardDivEl);
     cardDivEl.append(cardBodyDivEl);
@@ -176,11 +161,10 @@ function displayFiveDayForecast(weatherData) {
 
 function submitCitySearch(event) {
   event.preventDefault();
-
   const city = titleCase(cityInputEl.val().trim());
 
   if (searchHistoryArray.searchedCity.includes(city)) {
-    alert(city + ' is included in history below. Click the ' + city + ' button to get weather.');
+    alert(`${city} is included in history below. Click the ${city} button to get weather.`);
     cityInputEl.val('');
   } else if (city) {
     getWeather(city);
@@ -193,11 +177,12 @@ function submitCitySearch(event) {
   }
 }
 
-userFormEL.on('submit', submitCitySearch);
+document.addEventListener('DOMContentLoaded', function() {
+  userFormEl.on('submit', submitCitySearch);
 
-$('#search-btn').on('click', function () {
-  $('#current-weather').remove();
-  $('#five-day').empty();
-  $('#five-day-header').remove();
+  $('#search-btn').on('click', function () {
+    $('#current-weather').remove();
+    $('#five-day').empty();
+    $('#five-day-header').remove();
+  });
 });
-
