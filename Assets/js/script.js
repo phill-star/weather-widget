@@ -111,15 +111,7 @@ function displayCurrentDay(city, weatherData) {
     if (detail === `UV Index: ${weatherData.current.uvi}`) {
       const currWeatherListItem = $('<li>').text('UV Index: ');
       currWeatherListEl.append(currWeatherListItem);
-      const uviItem = $('<span>').text(weatherData.current.uvi);
-
-      if (uviItem.text() <= 2) {
-        uviItem.addClass('favorable');
-      } else if (uviItem.text() > 2 && uviItem.text() <= 7) {
-        uviItem.addClass('moderate');
-      } else {
-        uviItem.addClass('severe');
-      }
+      const uviItem = $('<span>').text(weatherData.current.uvi)
 
       currWeatherListItem.append(uviItem);
     } else {
