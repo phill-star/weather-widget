@@ -86,10 +86,12 @@ function getWeather(city) {
             });
         });
       } else {
-        alert('Error: Could not find city');
+        alert('Error: Open Weather could not find city');
       }
     })
-   
+    .catch(() => {
+      alert('Unable to connect to Open Weather');
+    });
 }
 
 function displayCurrentDay(city, weatherData) {
