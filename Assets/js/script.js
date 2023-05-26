@@ -20,6 +20,10 @@ function loadSearchHistory() {
   return searchHistoryArray;
 }
 
+function saveSearchHistory() {
+  localStorage.setItem('search history', JSON.stringify(searchHistoryArray));
+}
+
 function searchHistory(city) {
   const searchHistoryItem = $('<div>').addClass('search-history-item');
   const searchHistoryBtn = $('<button>').addClass('btn').text(city).on('click', () => {
@@ -70,6 +74,9 @@ function getWeather(city) {
       } else {
         alert('Error: Open Weather could not find city');
       }
+    })
+    .catch(() => {
+      alert('Unable to connect to Open Weather');
     });
 }
 
