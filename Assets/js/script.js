@@ -1,5 +1,5 @@
-const openWeatherApiKey = '26ba3a7e283acb9cd1e8665c6c3b319a';
-const openWeatherCoordinatesUrl = 'https://api.openweathermap.org/data/2.5/weather?q=';
+const apiKey = '26ba3a7e283acb9cd1e8665c6c3b319a';
+const coordinatesUrl = 'https://api.openweathermap.org/data/2.5/weather?q=';
 const oneCallUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=';
 const userFormEl = $('#city-search');
 const col2El = $('.col2');
@@ -15,14 +15,8 @@ function titleCase(str) {
 }
 
 function loadSearchHistory() {
-  let searchHistoryArray = JSON.parse(localStorage.getItem('search history'));
-
-  if (!searchHistoryArray) {
-    searchHistoryArray = { searchedCity: [] };
-  } else {
-    searchHistoryArray.searchedCity.forEach(city => searchHistory(city));
-  }
-
+  let searchHistoryArray = JSON.parse(localStorage.getItem('search history')) || { searchedCity: [] };
+  searchHistoryArray.searchedCity.forEach(city => searchHistory(city));
   return searchHistoryArray;
 }
 
@@ -31,28 +25,20 @@ function saveSearchHistory() {
 }
 
 function searchHistory(city) {
-  const searchHistoryBtn = $('<button>')
-    .addClass('btn')
-    .text(city)
-    .on('click', () => {
-      $('#current-weather').remove();
-      $('#five-day').empty();
-      $('#five-day-header').remove();
-      getWeather(city);
-    })
-    .attr('type', 'button');
-
-  const deleteBtn = $('<button>')
-    .addClass('delete-btn')
-    .html('&times;')
-    .on('click', event => {
-      event.stopPropagation();
-      const city = $(event.target).prev().text();
-      deleteSearchHistory(city);
-      $(event.target).parent().remove();
-    });
-
   const searchHistoryItem = $('<div>').addClass('search-history-item');
+  const searchHistoryBtn = $('<button>').addClass('btn').text(city).on('click', () => {
+    $('#current-weather').remove();
+    $('#five-day').empty();
+    $('#five-day-header').remove();
+    getWeather(city);
+  }).attr('type', 'button');
+  const deleteBtn = $('<button>').addClass('delete-btn').html('&times;').on('click', event => {
+    event.stopPropagation();
+    const city = $(event.target).prev().text();
+    deleteSearchHistory(city);
+    $(event.target).parent().remove();
+  });
+
   searchHistoryItem.append(searchHistoryBtn, deleteBtn);
   searchHistoryEl.append(searchHistoryItem);
 }
@@ -66,16 +52,16 @@ function deleteSearchHistory(city) {
 }
 
 function getWeather(city) {
-  const apiCoordinatesUrl = `${openWeatherCoordinatesUrl}${city}&appid=${openWeatherApiKey}`;
+  const coordinatesUrlWithCity = `${coordinatesUrl}${city}&appid=${apiKey}`;
 
-  fetch(apiCoordinatesUrl)
+  fetch(coordinatesUrlWithCity)
     .then(coordinateResponse => {
       if (coordinateResponse.ok) {
         coordinateResponse.json().then(data => {
           const { lat: cityLatitude, lon: cityLongitude } = data.coord;
-          const apiOneCallUrl = `${oneCallUrl}${cityLatitude}&lon=${cityLongitude}&appid=${openWeatherApiKey}&units=imperial`;
+          const oneCallUrlWithCoords = `${oneCallUrl}${cityLatitude}&lon=${cityLongitude}&appid=${apiKey}&units=imperial`;
 
-          fetch(apiOneCallUrl)
+          fetch(oneCallUrlWithCoords)
             .then(weatherResponse => {
               if (weatherResponse.ok) {
                 weatherResponse.json().then(weatherData => {
@@ -108,16 +94,12 @@ function displayCurrentDay(city, weatherData) {
   ];
 
   for (const detail of currWeatherDetails) {
-    if (detail === `UV Index: ${weatherData.current.uvi}`) {
-      const currWeatherListItem = $('<li>').text('UV Index: ');
-      currWeatherListEl.append(currWeatherListItem);
-      const uviItem = $('<span>').text(weatherData.current.uvi)
-
+    const currWeatherListItem = $('<li>').text(detail.includes('UV Index') ? 'UV Index: ' : detail);
+    if (detail.includes('UV Index')) {
+      const uviItem = $('<span>').text(weatherData.current.uvi);
       currWeatherListItem.append(uviItem);
-    } else {
-      const currWeatherListItem = $('<li>').text(detail);
-      currWeatherListEl.append(currWeatherListItem);
     }
+    currWeatherListEl.append(currWeatherListItem);
   }
 
   $('#five-day').before(currentWeatherEl);
@@ -169,7 +151,7 @@ function submitCitySearch(event) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
   userFormEl.on('submit', submitCitySearch);
 
   $('#search-btn').on('click', function () {
